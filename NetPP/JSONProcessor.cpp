@@ -1,21 +1,42 @@
 #include "include.h"
 
 
-
-JSONProcessor::JSONProcessor(std::string filepath)
+Package * JSONProcessor::ProcessPackage(std::string filepath)
 {
+	json json;
+
 	std::ifstream i(filepath, std::ios::in);
 	i >> json;
 
-	std::cout << json["__pack"];
-}
+	std::string package_name;
+	if (json["__pack"] != nullptr)
+		package_name = json["__pack"].get<std::string>();
+	else
+		throw std::string("Attribute __pack not specified");
+
+	int package_id = -1;
+	if (json["__id"] != nullptr && json["__id"].is_number_integer())
+		package_id = json["__id"].get<int>();
+	else
+		Console::Info("Attribute __id invalid or not specified -- We will generate it automatically");
+
+	Package * pack;
+	if (package_id < 0)
+		pack = new Package(package_name);
+	else
+		pack = new Package(package_name, package_id);
 
 
-JSONProcessor::~JSONProcessor()
-{
-}
+	/* fetch attributes */
 
-void JSONProcessor::Compile(std::ostream& file_out)
-{
-	file_out << "Lappen";
+	for (json::iterator attr = json.begin(); attr != json.end(); ++attr) {
+		if (attr.key() == "__pack" || attr.key() == "__id")
+			continue;
+
+		pack->AddAttribute(new PackageAttribute(attr.value().get<std::string>(), attr.key()));
+	}
+
+	/*------------------*/
+
+	return pack;
 }

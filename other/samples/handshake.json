@@ -1,7 +1,7 @@
 {
-  "__pack": "Handshake",
+    "__pack": "Handshake",
 
-  "name": "string",
-  "version": "int32",
-  "message": "string"
+    "name": "std::string",
+    "version": "int",
+    "message": "std::string"
 }

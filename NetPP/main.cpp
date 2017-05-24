@@ -39,10 +39,35 @@ int main(int argc, char * argv[])
 	if (!TreatParams(argc, argv))
 		return 1;
 
-	std::cout << "Input path: " << global::p_in.c_str() << std::endl;
-	std::cout << "Output path: " << global::p_out.c_str() << std::endl;
+	std::cout << "Input path: \"" << global::p_in.c_str() << "\"" << std::endl;
+	std::cout << "Output path: \"" << global::p_out.c_str() << "\"" << std::endl;
+	std::cout << std::endl;
 
-	std::cout << global::p_in + "/handshake.json" << std::endl;
+	IncludeFile include(global::p_out + "\\netpp.hpp");
 
-	JSONProcessor proc(global::p_in + "/handshake.json");
+	for (auto & p : std::experimental::filesystem::directory_iterator(global::p_in))
+	{
+		if (p.path().extension() != ".json")
+			continue;
+
+		std::cout << "-- " << p.path().string() << std::endl;
+
+		try
+		{
+			auto package = JSONProcessor::ProcessPackage(p.path().string());
+			std::ofstream out(global::p_out + "\\" + package->GetName() + ".hpp");
+			package->Compile(out, LANG_CPP);
+
+			Console::OK("Transpiling " + p.path().string());
+			include.AddInclude(package->GetName() + ".hpp");
+		}
+		catch(std::string msg)
+		{
+			Console::Error(msg);
+
+			break;
+		}
+	}
+
+	include.Save();
 }
