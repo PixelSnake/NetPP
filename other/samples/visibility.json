@@ -1,0 +1,7 @@
+{
+    "__pack": "VVisibilityPackage",
+    "__version": "int",
+    
+    "name": "std::string",
+    "is_protected": "int"
+}

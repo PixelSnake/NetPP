@@ -1,7 +1,6 @@
 {
-    "__pack": "Handshake",
-
-    "name": "std::string",
-    "version": "int",
-    "message": "std::string"
+    "__pack": "VHandshakePackage",
+    "__version": "int",
+    
+    "name": "std::string"
 }
