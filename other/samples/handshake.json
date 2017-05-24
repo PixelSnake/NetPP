@@ -1,0 +1,5 @@
+Handshake {
+	name: string,
+	version: int32,
+	message: string
+}
