@@ -1,5 +1,7 @@
-Handshake {
-	name: string,
-	version: int32,
-	message: string
+{
+  "__pack": "Handshake",
+
+  "name": "string",
+  "version": "int32",
+  "message": "string"
 }

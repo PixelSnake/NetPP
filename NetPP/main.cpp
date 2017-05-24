@@ -1,7 +1,5 @@
 #include "include.h"
 
-using json = nlohmann::json;
-
 bool TreatParams(int argc, char * argv[]);
 void PrintUsage();
 
@@ -11,9 +9,9 @@ bool TreatParams(int argc, char * argv[])
 	{
 		auto param = std::string(argv[i]);
 
-		if (param == "-i")
+		if (param == "-i" && argc >= i + 1)
 			global::p_in = std::string(argv[++i]);
-		else if (param == "-o")
+		else if (param == "-o" && argc >= i + 1)
 			global::p_out = std::string(argv[++i]);
 	}
 
@@ -31,11 +29,20 @@ void PrintUsage()
 {
 	using namespace std;
 
-	cout << "NetPP v" << VERSION << " by " << AUTHOR << endl;
+	
 }
 
 int main(int argc, char * argv[])
 {
+	std::cout << "NetPP v" << VERSION << " by " << AUTHOR << std::endl;
+
 	if (!TreatParams(argc, argv))
 		return 1;
+
+	std::cout << "Input path: " << global::p_in.c_str() << std::endl;
+	std::cout << "Output path: " << global::p_out.c_str() << std::endl;
+
+	std::cout << global::p_in + "/handshake.json" << std::endl;
+
+	JSONProcessor proc(global::p_in + "/handshake.json");
 }

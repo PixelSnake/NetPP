@@ -112,11 +112,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="global.cpp" />
+    <ClCompile Include="JSONProcessor.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="defines.h" />
     <ClInclude Include="include.h" />
+    <ClInclude Include="JSONProcessor.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="global.h" />
