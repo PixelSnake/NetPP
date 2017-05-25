@@ -1,0 +1,6 @@
+{
+	"placeholder": "\\[\\[([A-Z_]+)\\]\\]",
+	"global_context": "global_context.hpp",
+	"pack_template": "class_template.hpp",
+	"decoder_template": "decoder_template.hpp"
+}
