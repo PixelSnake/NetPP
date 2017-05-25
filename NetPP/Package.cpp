@@ -13,113 +13,98 @@ Package::~Package()
 {
 }
 
-std::string Package::GenerateCodeCPP()
+std::map<std::string, std::string> Package::CreatePlaceholderMap()
+{
+	std::map<std::string, std::string> map;
+
+	map["CLASSNAME"] = classname;
+
+	std::string private_attributes;
+	private_attributes += "static const int _NPP_PACKTYPE = " + std::to_string(id) + ";\n";
+	for (auto attr : attributes)
+		private_attributes += attr->GetType() + " " + attr->GetName() + ";\n";
+	map["PRIVATE_ATTRIBUTES"] = private_attributes;
+
+	std::string constr_params;
+	int counter = 0;
+	for (auto attr : attributes)
+		constr_params += (counter++ > 0 ? ", " : "") + attr->GetType() + " " + attr->GetName();
+	map["CONSTR_PARAMS"] = constr_params;
+
+	std::string constr_assign;
+	for (auto attr : attributes)
+		constr_assign += "this->" + attr->GetName() + " = " + attr->GetName() + ";\n";
+	map["CONSTR_ASSIGN"] = constr_assign;
+
+	map["ALGO_DECODE"] = CreateDecodingAlgorithm();
+	map["ALGO_SEND"] = CreateSendingAlgorithm();
+
+	return map;
+}
+
+std::string Package::CreateDecodingAlgorithm()
 {
 	std::string code;
 
-	code += "#pragma once\n";
+	code += "auto pack = new " + classname + "();\n\n";
+	code += "int offset = 0;\n\n";
 
-	/* class */
-	code += "class " + classname + " : PackageFactory<" + classname + ", IPackage>, IPackage\n";
-	code += "{\n";
+	for (auto attr : attributes)
 	{
-		code += "\tstatic const int _NPP_PACKTYPE = " + std::to_string(id) + ";\n\n";
-
-		for (auto attr : attributes)
-			code += "\t" + attr->GetType() + " " + attr->GetName() + ";\n";
-
-		code += "\n";
-
-		code += "\t" + classname + "() {}\n";
-
-		code += "\n";
-		code += "public:\n";
-
-
-		/* constructor */
-		code += "\t" + classname + "(";
-
-		int counter = 0;
-		for (auto attr : attributes)
-			code += (counter++ > 0 ? ", " : "") + attr->GetType() + " " + attr->GetName();
-
-		code += ")\n";
-
-		code += "\t{\n";
+		if (attr->GetType() == "std::string")
 		{
-			for (auto attr : attributes)
-				code += "\t\tthis->" + attr->GetName() + " = " + attr->GetName() + ";\n";
-		}
-		code += "\t}\n\n";
-
-		code += "\t~" + classname + "() {}\n\n";
-
-		/* decode function */
-		code += "\tstatic " + classname + " * Decode(char * data)\n";
-		code += "\t{\n";
-		{
-			code += "\t\tauto pack = new " + classname + "();\n\n";
-			code += "\t\tint offset = 0;\n\n";
-
-			for (auto attr : attributes)
-			{
-				if (attr->GetType() == "std::string")
-				{
-					code += "\t\tpack->" + attr->GetName() + " = std::string(data + offset);\n";
-					code += "\t\toffset += pack->" + attr->GetName() + ".length();\n";
-					code += "\n";
-				}
-				else
-				{
-					code += "\t\tmemcpy(&pack->" + attr->GetName() + ", data + offset, sizeof(" + attr->GetType() + "));\n";
-					code += "\t\toffset += sizeof(" + attr->GetName() + ");\n";
-					code += "\n";
-				}
-			}
-
-			code += "\t\treturn pack;\n";
-		}
-		code += "\t}\n\n";
-
-
-		code += "\tvoid Send(SOCKET sock)\n";
-		code += "\t{\n";
-		{
-			code += "\t\tint size = 0;\n";
-
-			for (auto attr : attributes)
-			{
-				if (attr->GetType() == "std::string")
-					code += "\t\tsize += " + attr->GetName() + ".length();\n";
-				else
-					code += "\t\tsize += sizeof(" + attr->GetType() + ");\n";
-			}
-
+			code += "pack->" + attr->GetName() + " = std::string(data + offset);\n";
+			code += "offset += pack->" + attr->GetName() + ".length();\n";
 			code += "\n";
-			code += "\t\tchar * data = calloc(size, 1);\n";
-			code += "\t\tint offset = 0;\n";
-			code += "\n";
-
-			for (auto attr : attributes)
-			{
-				if (attr->GetType() == "std::string")
-				{
-					code += "\t\tmemcpy(data + offset, " + attr->GetName() + ".c_str(), " + attr->GetName() + ".length());\n";
-					code += "\t\toffset += " + attr->GetName() + ".length()\n";
-					code += "\n";
-				}
-				else
-				{
-					code += "\t\tmemcpy(data + offset, &" + attr->GetName() + ", sizeof(" + attr->GetName() + "));\n";
-					code += "\t\tsizeof(" + attr->GetType() + ");\n";
-					code += "\n";
-				}
-			}
-			code += "\t\tsend(sock, data, size, 0);\n";
 		}
-		code += "\t}\n";
+		else
+		{
+			code += "memcpy(&pack->" + attr->GetName() + ", data + offset, sizeof(" + attr->GetType() + "));\n";
+			code += "offset += sizeof(" + attr->GetName() + ");\n";
+			code += "\n";
+		}
 	}
-	code += "}\n";
+
+	code += "return pack;\n";
+
+	return code;
+}
+
+std::string Package::CreateSendingAlgorithm()
+{
+	std::string code;
+
+	code += "int size = 0;\n";
+
+	for (auto attr : attributes)
+	{
+		if (attr->GetType() == "std::string")
+			code += "size += " + attr->GetName() + ".length();\n";
+		else
+			code += "size += sizeof(" + attr->GetType() + ");\n";
+	}
+
+	code += "\n";
+	code += "char * data = calloc(size, 1);\n";
+	code += "int offset = 0;\n";
+	code += "\n";
+
+	for (auto attr : attributes)
+	{
+		if (attr->GetType() == "std::string")
+		{
+			code += "memcpy(data + offset, " + attr->GetName() + ".c_str(), " + attr->GetName() + ".length());\n";
+			code += "offset += " + attr->GetName() + ".length()\n";
+			code += "\n";
+		}
+		else
+		{
+			code += "memcpy(data + offset, &" + attr->GetName() + ", sizeof(" + attr->GetName() + "));\n";
+			code += "sizeof(" + attr->GetType() + ");\n";
+			code += "\n";
+		}
+	}
+	code += "send(sock, data, size, 0);\n";
 
 	return code;
 }
@@ -129,11 +114,8 @@ void Package::AddAttribute(PackageAttribute * attr)
 	attributes.push_back(attr);
 }
 
-void Package::Compile(std::ostream & file_out, int language)
+std::string Package::Compile(json& conf)
 {
-	switch (language)
-	{
-	case LANG_CPP:
-		file_out << GenerateCodeCPP();
-	}
+	PackageTemplate temp(conf);
+	return temp.Replace(CreatePlaceholderMap());
 }

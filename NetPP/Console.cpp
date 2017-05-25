@@ -39,3 +39,10 @@ void Console::Error(std::string error)
 
 	std::cout << error << std::endl;
 }
+
+void Console::PrintWithAttributes(std::string message, WORD attributes)
+{
+	SetConsoleTextAttribute(static_attributes.hConsole, attributes);
+	std::cout << message;
+	SetConsoleTextAttribute(static_attributes.hConsole, static_attributes.hCDefault.wAttributes);
+}

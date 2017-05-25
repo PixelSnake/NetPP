@@ -112,28 +112,30 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Console.cpp" />
+    <ClCompile Include="DecoderTemplate.cpp" />
     <ClCompile Include="IncludeFile.cpp" />
     <ClCompile Include="Package.cpp" />
     <ClCompile Include="global.cpp" />
     <ClCompile Include="JSONProcessor.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="PackageAttribute.cpp" />
+    <ClCompile Include="PackageTemplate.cpp" />
+    <ClCompile Include="Tools.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Console.h" />
+    <ClInclude Include="DecoderTemplate.h" />
     <ClInclude Include="IncludeFile.h" />
     <ClInclude Include="Package.h" />
     <ClInclude Include="defines.h" />
     <ClInclude Include="include.h" />
     <ClInclude Include="JSONProcessor.h" />
     <ClInclude Include="PackageAttribute.h" />
-    <ClInclude Include="resource1.h" />
+    <ClInclude Include="PackageTemplate.h" />
+    <ClInclude Include="Tools.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="global.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="NetPP1.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

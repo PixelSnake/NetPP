@@ -9,10 +9,6 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
     <Filter Include="Source Files\Processing">
       <UniqueIdentifier>{f9097c73-94bc-470c-aef2-e41b3c4390ab}</UniqueIdentifier>
     </Filter>
@@ -51,8 +47,17 @@
     <ClCompile Include="IncludeFile.cpp">
       <Filter>Source Files\Processing\CodeGeneration</Filter>
     </ClCompile>
+    <ClCompile Include="PackageTemplate.cpp">
+      <Filter>Source Files\Processing\CodeGeneration</Filter>
+    </ClCompile>
+    <ClCompile Include="Tools.cpp">
+      <Filter>Source Files\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="DecoderTemplate.cpp">
+      <Filter>Source Files\Processing\CodeGeneration</Filter>
+    </ClCompile>
     <ClCompile Include="PackageAttribute.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Processing\CodeGeneration</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -74,21 +79,22 @@
     <ClInclude Include="IncludeFile.h">
       <Filter>Header Files\Processing\CodeGeneration</Filter>
     </ClInclude>
-    <ClInclude Include="PackageAttribute.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="PackageTemplate.h">
+      <Filter>Header Files\Processing\CodeGeneration</Filter>
     </ClInclude>
-    <ClInclude Include="resource1.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="Tools.h">
+      <Filter>Header Files\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="PackageAttribute.h">
+      <Filter>Header Files\Processing\CodeGeneration</Filter>
+    </ClInclude>
+    <ClInclude Include="DecoderTemplate.h">
+      <Filter>Header Files\Processing\CodeGeneration</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="global.h">
       <Filter>Header Files</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="NetPP1.rc">
-      <Filter>Resource Files</Filter>
-    </ResourceCompile>
   </ItemGroup>
 </Project>

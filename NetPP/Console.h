@@ -28,5 +28,7 @@ public:
 	static void OK(std::string message);
 	static void Warn(std::string warning);
 	static void Error(std::string error);
+
+	static void PrintWithAttributes(std::string message, WORD attributes);
 };
 

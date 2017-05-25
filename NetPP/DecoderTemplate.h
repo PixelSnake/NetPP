@@ -1,17 +1,15 @@
 #pragma once
-class IncludeFile
+class DecoderTemplate
 {
 	std::string content;
 	std::string global_context;
 	std::regex placeholder_regex;
 
-	IncludeFile();
-
 public:
-	const IncludeFile& operator<<(const std::string input);
+	const DecoderTemplate& operator<<(const std::string input);
 
-	IncludeFile(nlohmann::json& conf);
-	~IncludeFile();
+	DecoderTemplate(nlohmann::json& conf);
+	~DecoderTemplate();
 
 	void Save(std::ofstream& file_out);
 };

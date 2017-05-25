@@ -1,0 +1,5 @@
+{
+	"language": "cpp",
+    "input": "other/samples",
+    "output": "other/out"
+}
